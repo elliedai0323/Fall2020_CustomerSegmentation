@@ -60,7 +60,7 @@ n_clusters = 3
 init_point_selection_method = 'k-means++'
 
 # --- select data
-cols_for_clustering = None ##### specify list of attributes on which to base clusters
+cols_for_clustering = ['store_1', 'store_2', 'store_3', 'store_4', 'store_5', 'store_6', 'store_7', 'store_8', 'store_9'] ##### specify list of attributes on which to base clusters
 df_cluster = df.loc[:, cols_for_clustering]
 
 # --- split to test and train
@@ -79,9 +79,18 @@ model, model_summary = run_kmeans(n_clusters, init_point_selection_method, df_cl
 
 # --- run for various number of clusters
 ##### add the code to run the clustering algorithm for various numbers of clusters
+wcss = []
+for i in range(1,10):
+    kmeans = KMeans(n_clusters=i, init=init_point_selection_method).fit(df_cluster)
+    wcss.append(kmeans.inertia_)
 
 # --- draw elbow plot
 ##### create an elbow plot for your numbers of clusters in previous step
+plt.plot(range(1, 10), wcss)
+plt.title('Elbow Method')
+plt.xlabel('Number of clusters')
+plt.ylabel('WCSS')
+plt.show()
 
 # --- output tagged data for examination ----
 store_col_names = ['store_1', 'store_2', 'store_3', 'store_4', 'store_5', 'store_6', 'store_7', 'store_8', 'store_9']
