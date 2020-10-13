@@ -10,6 +10,7 @@ import matplotlib.pylab as plt
 
 pd.set_option('display.max_columns', 25)
 
+##check
 
 # ------ Define functions ------
 def run_kmeans(n_clusters_f, init_f, df_f):
