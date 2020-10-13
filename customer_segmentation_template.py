@@ -10,10 +10,10 @@ import matplotlib.pylab as plt
 
 pd.set_option('display.max_columns', 25)
 
-##check
 
 # ------ Define functions ------
 def run_kmeans(n_clusters_f, init_f, df_f):
+    
     ##### Complete this function
     # This function should at least take a dataframe as an argument. I have suggested additional arguments you may
     # want to provide, but these can be changed as you need to fit your solution.
@@ -21,14 +21,15 @@ def run_kmeans(n_clusters_f, init_f, df_f):
     # function will need to add an additional column to the input dataframe called 'predict_cluster_kmeans'
     # that contains the cluster labels assigned by the algorithm.
 
-    k_means_model_f = None #####
+    k_means_model_f = KMeans(n_clusters=n_clusters_f,init=init_f).fit(df_f)
+    df_f['predict_cluster_kmeans'] = k_means_model_f.labels_
 
     # summarize cluster attributes
     k_means_model_f_summary = df_f.groupby('predict_cluster_kmeans').agg(attribute_summary_method_dict)
     return k_means_model_f, k_means_model_f_summary
 
 # ------ Import data ------
-df_transactions = pd.read_pickle('transactions_n100000')
+df_transactions = pd.read_pickle('transactions_n100000',compression=None)
 
 # ------ Engineer features -----
 # --- convert from long to wide
