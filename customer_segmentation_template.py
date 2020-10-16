@@ -40,8 +40,16 @@ df_transactions.drop(columns='index', inplace=True)
 # --- add back date and location
 df = df.merge(df_transactions[['ticket_id', 'location', 'order_timestamp']].drop_duplicates(), how='left', on='ticket_id')
 
+df1 = df.order_timestamp
+
 # --- extract hour of day from datetime
-df['hour'] = df.order_timestamp.apply(lambda x: x.hour)
+
+###df['hour'] = df2.order_timestamp.apply(lambda x: x.hour)
+time=df1.values
+hour = [x.split(' ')[1][:2] for x in time]
+for i in hour:
+    i = int(i)
+df['hour']=hour
 
 # --- convert categorical store variables to dummies
 encoded_data = OneHotEncoder()  ##### use sklearn.preprocessing.OneHotEncoder() to create a class object called encoded_data (see documentation for OneHotEncoder online)
