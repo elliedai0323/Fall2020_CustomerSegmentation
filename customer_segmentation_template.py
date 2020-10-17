@@ -29,7 +29,7 @@ def run_kmeans(n_clusters_f, init_f, df_f):
     return k_means_model_f, k_means_model_f_summary
 
 # ------ Import data ------
-df_transactions = pd.read_pickle('transactions_n100000')
+df_transactions = pd.read_csv('transactions_n100000.csv')
 
 # ------ Engineer features -----
 # --- convert from long to wide
