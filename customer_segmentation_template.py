@@ -29,7 +29,7 @@ def run_kmeans(n_clusters_f, init_f, df_f):
     return k_means_model_f, k_means_model_f_summary
 
 # ------ Import data ------
-df_transactions = pd.read_csv('transactions_n100000.csv')
+df_transactions = pd.read_csv('transactions_n100000.csv',index_col=None)
 
 # ------ Engineer features -----
 # --- convert from long to wide
@@ -52,7 +52,7 @@ for i in hour:
 df['hour']=hour
 
 # --- convert categorical store variables to dummies
-encoded_data = OneHotEncoder()  ##### use sklearn.preprocessing.OneHotEncoder() to create a class object called encoded_data (see documentation for OneHotEncoder online)
+encoded_data = OneHotEncoder().fit(np.array(df['location']).reshape(-1, 1))  ##### use sklearn.preprocessing.OneHotEncoder() to create a class object called encoded_data (see documentation for OneHotEncoder online)
 ##### call the method used to fit data for a OneHotEncorder object. Note: you will have to reshape data from a column of the data frame. useful functions may be DataFrame methods .to_list(), .reshape(), and .shape()
 col_map_store_binary = dict(zip(list(encoded_data.get_feature_names()), ['store_' + x.split('x0_')[1] for x in encoded_data.get_feature_names()]))
 
