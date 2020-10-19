@@ -1,4 +1,4 @@
-df_transactions.shape
+
 import pandas as pd
 import numpy as np
 
@@ -24,13 +24,13 @@ def run_kmeans(n_clusters_f, init_f, df_f):
 
     k_means_model_f = KMeans(n_clusters=n_clusters_f,init=init_f).fit(df_f)
     df_f['predict_cluster_kmeans'] = k_means_model_f.labels_
+    print(df_f['predict_cluster_kmeans'])
 
     # summarize cluster attributes
     k_means_model_f_summary = df_f.groupby('predict_cluster_kmeans').agg(attribute_summary_method_dict)
     return k_means_model_f, k_means_model_f_summary
 
 # ------ Import data ------
-# df_transations.shape
 
 df_transactions = pd.read_csv('transactions_n100000.csv') #7 columns
 # ------ Engineer features -----
@@ -53,6 +53,7 @@ for i in hour:
     i = int(i)
 df['hour']=hour
 
+
 # --- convert categorical store variables to dummies
 encoded_data = OneHotEncoder()
 encoded_data.fit(np.array(df['location']).reshape(-1,1))  
@@ -66,22 +67,38 @@ df_store_binary.columns = encoded_data.get_feature_names()
 df_store_binary.rename(columns=col_map_store_binary, inplace=True)
 
 df = pd.concat([df, df_store_binary], axis=1)
+df['burger'] = df['burger'].astype(int)
+df['fries'] = df['fries'].astype(int)
+df['salad'] = df['salad'].astype(int)
+df['shake'] = df['shake'].astype(int)
+df['location'] = df['location'].astype(int)
+df['store_1.0'] = df['store_1.0'].astype(int)
+df['store_2.0'] = df['store_2.0'].astype(int)
+df['store_3.0'] = df['store_3.0'].astype(int)
+df['store_4.0'] = df['store_4.0'].astype(int)
+df['store_5.0'] = df['store_5.0'].astype(int)
+df['store_6.0'] = df['store_6.0'].astype(int)
+df['store_7.0'] = df['store_7.0'].astype(int)
+df['store_8.0'] = df['store_8.0'].astype(int)
+df['store_9.0'] = df['store_9.0'].astype(int)
 
+
+print(df.head())
 # ------ RUN CLUSTERING -----
 # --- set parameters
 n_clusters = 3
 init_point_selection_method = 'k-means++'
 
 # --- select data
-cols_for_clustering = ['store_1', 'store_2', 'store_3', 'store_4', 'store_5', 'store_6', 'store_7', 'store_8', 'store_9'] ##### specify list of attributes on which to base clusters
+cols_for_clustering = ['burger','fries','salad','shake','hour','store_1.0','store_2.0','store_3.0','store_4.0','store_5.0','store_6.0','store_7.0','store_8.0','store_9.0'] ##### specify list of attributes on which to base clusters
 df_cluster = df.loc[:, cols_for_clustering]
-
+print(df_cluster)
 # --- split to test and train
 df_cluster_train, df_cluster_test, _, _, = train_test_split(df_cluster, [1]*df_cluster.shape[0], test_size=0.33)   # ignoring y values for unsupervised
 
 # --- fit model
-attribute_summary_method_dict = {'burger': np.mean, 'fries': np.mean, 'salad': np.mean, 'shake': np.mean, 'hour': np.mean, 'store_1': sum, 'store_4': sum, 'store_6': sum, 'store_3': sum, 'store_9': sum, 'store_2': sum, 'store_8': sum, 'store_5': sum, 'store_7': sum}
-col_output_order = ['burger', 'fries', 'salad', 'shake', 'hour', 'store_1', 'store_2', 'store_3', 'store_4', 'store_5', 'store_6', 'store_7', 'store_8', 'store_9'] ##### specify order of output columns for easy of readability
+attribute_summary_method_dict = {'burger': np.mean, 'fries': np.mean, 'salad': np.mean, 'shake': np.mean, 'hour': np.mean, 'store_1.0': sum, 'store_4.0': sum, 'store_6.0': sum, 'store_3.0': sum, 'store_9.0': sum, 'store_2.0': sum, 'store_8.0': sum, 'store_5.0': sum, 'store_7.0': sum}
+col_output_order = ['burger', 'fries', 'salad', 'shake', 'hour', 'store_1.0', 'store_2.0', 'store_3.0', 'store_4.0', 'store_5.0', 'store_6.0', 'store_7.0', 'store_8.0', 'store_9.0'] ##### specify order of output columns for easy of readability
 
 # training data
 train_model, train_model_summary = run_kmeans(n_clusters, init_point_selection_method, df_cluster_train.reindex())
@@ -106,7 +123,7 @@ plt.ylabel('WCSS')
 plt.show()
 
 # --- output tagged data for examination ----
-store_col_names = ['store_1', 'store_2', 'store_3', 'store_4', 'store_5', 'store_6', 'store_7', 'store_8', 'store_9']
+store_col_names = ['store_1.0', 'store_2.0', 'store_3.0', 'store_4.0', 'store_5.0', 'store_6.0', 'store_7.0', 'store_8.0', 'store_9.0']
 df_cluster['store'] = None
 for t_col in store_col_names:
     df_cluster.loc[df_cluster[t_col] == 1, 'store'] = t_col.split('_')[1]
