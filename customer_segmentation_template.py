@@ -135,7 +135,7 @@ df_cluster.to_csv('clustering_output.csv')
 
 # assign cluster mode to location
 t_df = df_cluster.groupby('store')['predict_cluster_kmeans'].apply(lambda x: x.mode()).reset_index()[['store', 'predict_cluster_kmeans']]
-df_transactions[['location', 'lat', 'long']].drop_duplicates().merge(t_df, how='left', left_on='location', right_on='store').to_csv('store_locations.csv')
+df_transactions[['location', 'lat', 'long']].drop_duplicates().concat(t_df, how='left', left_on='location', right_on='store').to_csv('store_locations.csv')
 
 # ---- Bonus code (not part of assignment) ------
 # GMM
