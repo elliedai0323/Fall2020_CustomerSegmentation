@@ -1,3 +1,4 @@
+df_transactions.shape
 import pandas as pd
 import numpy as np
 
@@ -29,8 +30,9 @@ def run_kmeans(n_clusters_f, init_f, df_f):
     return k_means_model_f, k_means_model_f_summary
 
 # ------ Import data ------
-df_transactions = pd.read_csv('transactions_n100000.csv',index_col=None)
+# df_transations.shape
 
+df_transactions = pd.read_csv('transactions_n100000.csv') #7 columns
 # ------ Engineer features -----
 # --- convert from long to wide
 df = df_transactions.pivot(index='ticket_id', columns='item_name', values='item_count').fillna(0)
@@ -52,11 +54,14 @@ for i in hour:
 df['hour']=hour
 
 # --- convert categorical store variables to dummies
-encoded_data = OneHotEncoder().fit(np.array(df['location']).reshape(-1, 1))  ##### use sklearn.preprocessing.OneHotEncoder() to create a class object called encoded_data (see documentation for OneHotEncoder online)
+encoded_data = OneHotEncoder()
+encoded_data.fit(np.array(df['location']).reshape(-1,1))  
+encoded_data.categories_##### use sklearn.preprocessing.OneHotEncoder() to create a class object called encoded_data (see documentation for OneHotEncoder online)
 ##### call the method used to fit data for a OneHotEncorder object. Note: you will have to reshape data from a column of the data frame. useful functions may be DataFrame methods .to_list(), .reshape(), and .shape()
 col_map_store_binary = dict(zip(list(encoded_data.get_feature_names()), ['store_' + x.split('x0_')[1] for x in encoded_data.get_feature_names()]))
-
-df_store_binary = pd.DataFrame(encoded_data.transform(X=np.array(df['location'].tolist()).reshape(df.shape[0], 1)))
+print(encoded_data.get_feature_names())
+df_store_binary = pd.DataFrame(encoded_data.transform(X=np.array(df['location'].tolist()).reshape(df.shape[0], 1)).toarray())
+print(df_store_binary.head())
 df_store_binary.columns = encoded_data.get_feature_names()
 df_store_binary.rename(columns=col_map_store_binary, inplace=True)
 
