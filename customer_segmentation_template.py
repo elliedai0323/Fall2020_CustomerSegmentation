@@ -125,10 +125,19 @@ for t_col in store_col_names:
     df_cluster.loc[df_cluster[t_col] == 1, 'store'] = t_col.split('_')[1]
 
 df_cluster.to_csv('clustering_output.csv')
+print(df_cluster.head())
 
 # assign cluster mode to location
+df_transactions['location'] = df_transactions['location'].astype(int)
+df_transactions['lat'] = df_transactions['lat'].astype(float)
+df_transactions['long'] = df_transactions['long'].astype(float)
+
+
 t_df = df_cluster.groupby('store')['predict_cluster_kmeans'].apply(lambda x: x.mode()).reset_index()[['store', 'predict_cluster_kmeans']]
-df_transactions[['location', 'lat', 'long']].drop_duplicates().concat(t_df, how='left', left_on='location', right_on='store').to_csv('store_locations.csv')
+
+
+
+df_transactions[['location', 'lat', 'long']].drop_duplicates().merge(t_df, how='left', left_on='location', right_on='store').to_csv('store_locations.csv')
 
 # ---- Bonus code (not part of assignment) ------
 # GMM
