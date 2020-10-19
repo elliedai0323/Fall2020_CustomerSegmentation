@@ -23,7 +23,9 @@ def run_kmeans(n_clusters_f, init_f, df_f):
     # that contains the cluster labels assigned by the algorithm.
 
     k_means_model_f = KMeans(n_clusters=n_clusters_f,init=init_f).fit(df_f)
+    print(k_means_model_f)
     df_f['predict_cluster_kmeans'] = k_means_model_f.labels_
+    df_f['predict_cluster_kmeans'] = df_f['predict_cluster_kmeans'].astype(int)
     print(df_f['predict_cluster_kmeans'])
 
     # summarize cluster attributes
@@ -71,6 +73,7 @@ df['burger'] = df['burger'].astype(int)
 df['fries'] = df['fries'].astype(int)
 df['salad'] = df['salad'].astype(int)
 df['shake'] = df['shake'].astype(int)
+df['hour'] = df['hour'].astype(int)
 df['location'] = df['location'].astype(int)
 df['store_1.0'] = df['store_1.0'].astype(int)
 df['store_2.0'] = df['store_2.0'].astype(int)
