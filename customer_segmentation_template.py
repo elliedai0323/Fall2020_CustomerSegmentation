@@ -23,10 +23,8 @@ def run_kmeans(n_clusters_f, init_f, df_f):
     # that contains the cluster labels assigned by the algorithm.
 
     k_means_model_f = KMeans(n_clusters=n_clusters_f,init=init_f).fit(df_f)
-    print(k_means_model_f)
     df_f['predict_cluster_kmeans'] = k_means_model_f.labels_
     df_f['predict_cluster_kmeans'] = df_f['predict_cluster_kmeans'].astype(int)
-    print(df_f['predict_cluster_kmeans'])
 
     # summarize cluster attributes
     k_means_model_f_summary = df_f.groupby('predict_cluster_kmeans').agg(attribute_summary_method_dict)
@@ -62,9 +60,7 @@ encoded_data.fit(np.array(df['location']).reshape(-1,1))
 encoded_data.categories_##### use sklearn.preprocessing.OneHotEncoder() to create a class object called encoded_data (see documentation for OneHotEncoder online)
 ##### call the method used to fit data for a OneHotEncorder object. Note: you will have to reshape data from a column of the data frame. useful functions may be DataFrame methods .to_list(), .reshape(), and .shape()
 col_map_store_binary = dict(zip(list(encoded_data.get_feature_names()), ['store_' + x.split('x0_')[1] for x in encoded_data.get_feature_names()]))
-print(encoded_data.get_feature_names())
 df_store_binary = pd.DataFrame(encoded_data.transform(X=np.array(df['location'].tolist()).reshape(df.shape[0], 1)).toarray())
-print(df_store_binary.head())
 df_store_binary.columns = encoded_data.get_feature_names()
 df_store_binary.rename(columns=col_map_store_binary, inplace=True)
 
@@ -85,8 +81,6 @@ df['store_7.0'] = df['store_7.0'].astype(int)
 df['store_8.0'] = df['store_8.0'].astype(int)
 df['store_9.0'] = df['store_9.0'].astype(int)
 
-
-print(df.head())
 # ------ RUN CLUSTERING -----
 # --- set parameters
 n_clusters = 3
@@ -95,7 +89,6 @@ init_point_selection_method = 'k-means++'
 # --- select data
 cols_for_clustering = ['burger','fries','salad','shake','hour','store_1.0','store_2.0','store_3.0','store_4.0','store_5.0','store_6.0','store_7.0','store_8.0','store_9.0'] ##### specify list of attributes on which to base clusters
 df_cluster = df.loc[:, cols_for_clustering]
-print(df_cluster)
 # --- split to test and train
 df_cluster_train, df_cluster_test, _, _, = train_test_split(df_cluster, [1]*df_cluster.shape[0], test_size=0.33)   # ignoring y values for unsupervised
 
