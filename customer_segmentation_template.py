@@ -123,7 +123,7 @@ store_col_names = ['store_1.0', 'store_2.0', 'store_3.0', 'store_4.0', 'store_5.
 df_cluster['store'] = None
 for t_col in store_col_names:
     df_cluster.loc[df_cluster[t_col] == 1, 'store'] = t_col.split('_')[1]
-
+df_cluster['store'] = df_cluster['store'].astype(int)
 df_cluster.to_csv('clustering_output.csv')
 print(df_cluster.head())
 
